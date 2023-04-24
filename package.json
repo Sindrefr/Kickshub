@@ -1,0 +1,29 @@
+{
+  "name": "kickshub",
+  "version": "1.0.0",
+  "description": "prøveeksamen",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sindrefr/Kickshub.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sindrefr/Kickshub/issues"
+  },
+  "homepage": "https://github.com/Sindrefr/Kickshub#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-static": "^1.2.6",
+    "mongodb": "4.1",
+    "mongoose": "^7.0.4"
+  }
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>KicksHub</title>
+    <link rel="stylesheet" href="/styles.css">
+    
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/admin">Admin Login</a></li>
+          <li><a href="/about">About Us</a></li>
+        </ul>
+      </nav>
+      <h1>KicksHub</h1>
+    </header>
+    
+    <main>
+      <h2>Our newest products!</h2>
+      <% products.forEach(product => { %>
+        <div class="product">
+          <img src="/img/istockphoto-1147544807-612x612.jpg" alt="Product Image">
+          <h2><%= product.tittel %></h2>
+          <p><b>Pris: <%= product.pris %></b></p>
+          <p>Opprettet: <%= product.dato %></p>
+          <p>Modell: <%= product.modell %></p>
+          <p>Merke: <%= product.merke %></p>
+          <p>Artikkelnummer: <%= product.artikkelnummer %></p>
+        </div>
+      <% }) %>
+    </main>
+    
+    <footer>
+      <p>&copy; 2023 KicksHub</p>
+    </footer>
+    
+    <script src="../app.js" defer></script>
+  </body>
+</html>
