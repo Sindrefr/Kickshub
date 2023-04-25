@@ -1,15 +1,22 @@
-<!-- views/add-products.ejs -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KicksHub</title>
+    <link rel="stylesheet" href="/styles.css">
+    
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+        </ul>
+      </nav>
     <title>Add Products</title>
   </head>
   <body>
     <h1>Add Products</h1>
-    <form method="POST" action="/products">
+    <form class="addForm" method="POST" action="/products">
       <label for="tittel">Title:</label>
       <input type="text" name="tittel" id="tittel" required>
 
@@ -26,7 +33,7 @@
       <input type="number" name="pris" id="pris" required>
 
       <label for="artikkelnummer">Article Number:</label>
-      <input type="text" name="Artikkelnummer" id="artikkelnummer" required>
+      <input type="text" name="artikkelnummer" id="artikkelnummer" required>
 
       <button type="submit">Add Product</button>
     </form>

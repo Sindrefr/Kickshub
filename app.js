@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const app = express();
+require('dotenv').config()
 
 // Serve static files
 app.use(express.static('public'));
@@ -12,7 +13,7 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 // Configure the MongoDB Atlas connection
-const uri = 'mongodb+srv://admin:eUOYaRaihHV7MwQA@cluster0.f0vgbuk.mongodb.net/<dbname>?retryWrites=true&w=majority';
+const uri = `mongodb+srv://admin:${process.env.DB_PASSWORD}@cluster0.f0vgbuk.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
 let productsCollection;
@@ -30,7 +31,7 @@ client.connect(err => {
 
 // Render a list of products on the index page
 app.get('/', (req, res) => {
-  productsCollection.find().sort({ date: -1 }).limit(10).toArray((err, results) => {
+  productsCollection.find().sort({ dato: -1 }).limit(10).toArray((err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -59,7 +60,8 @@ app.post('/admin', (req, res) => {
         res.redirect('/add-products');
       } else {
         // If the username and password don't match, display an error message
-        res.render('admin', { message: 'Invalid username or password' });
+        res.render('admin', { errorMessage: 'Invalid username or password!' });
+
       }
     }
   });
@@ -73,7 +75,7 @@ app.get('/add-products', (req, res) => {
 // Add a new product to the database
 app.post('/products', (req, res) => {
   const { tittel, dato, modell, merke, pris, artikkelnummer } = req.body;
-  const product = { tittel, dato, modell, merke, pris, artikkelnummer };
+  const products = { tittel, dato, modell, merke, pris, artikkelnummer };
   productsCollection.insertOne(products, (err, result) => {
     if (err) {
       console.log(err);
