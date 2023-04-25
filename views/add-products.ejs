@@ -10,6 +10,7 @@
       <nav>
         <ul>
           <li><a href="/">Home</a></li>
+          <li><a href="/veileder">Veileder</a></li>
         </ul>
       </nav>
     <title>Add Products</title>
@@ -37,5 +38,19 @@
 
       <button type="submit">Add Product</button>
     </form>
+
+    <h1>Add Products</h1>
+    <h1>Add Products</h1>
+
+    <% products.forEach((product) => { %>
+      <form method="POST" action="/delete-product">
+        <button type="submit" name="productId" value="<%= products._id %>">Delete</button>
+
+      </form>
+      <%= product.tittel %>
+    <% }); %>
+    
+
+
   </body>
 </html>
