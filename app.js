@@ -6,30 +6,31 @@ require('dotenv').config()
 const session = require('express-session');
 const { ObjectId } = require('mongodb');
 
-
-
+// Konfigurerer express-session midleware for å lagre session data i MongoDB
 app.use(session({
   secret: 'your-secret-key',
   resave: false,
   saveUninitialized: true
 }));
 
-
-// Serve static files
+// Håndterer statiske filer i public mappen
 app.use(express.static('public'));
 
-// Set up the Express app
+// Konfigurerer appen til å bruke bodyParser for å tolke URL-encoded data og JSON-data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Setter ejs som view engine
 app.set('view engine', 'ejs');
 
-// Configure the MongoDB Atlas connection
+// Konfigurerer MongoDB Atlas connection string
 const uri = `mongodb+srv://admin:${process.env.DB_PASSWORD}@cluster0.f0vgbuk.mongodb.net/<dbname>?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
 let productsCollection;
 let usersCollection;
 
+// Koble til MongoDB-databasen og lagre referanser til products og users collections
 client.connect(err => {
   if (err) {
     console.log(err);
@@ -40,7 +41,7 @@ client.connect(err => {
   }
 });
 
-// Render a list of products on the index page
+// Viser en liste over produkter på index siden
 app.get('/', (req, res) => {
   productsCollection.find().sort({ dato: -1 }).limit(10).toArray((err, results) => {
     if (err) {
@@ -51,24 +52,28 @@ app.get('/', (req, res) => {
   });
 });
 
+// Viser about siden
 app.get('/about', (req, res) => {
   res.render('about');
 });
 
+// Viser admin siden
 app.get('/admin', (req, res) => {
   res.render('admin');
 });
 
+// Middleware funksjon som sjekker om brukeren er autentisert
 function requireAuth(req, res, next) {
   if (req.session && req.session.user) {
-    // If the user is authenticated, call the next middleware function
+    // Hvis brukeren er autentisert, fortsetter requesten til neste middleware funksjon
     return next();
   } else {
-    // If the user is not authenticated, redirect to the login page
+    // Hvis brukeren ikke er autentisert, redirect til login siden
     res.redirect('/admin');
   }
 }
 
+// Login funksjonalitet
 app.post('/admin', (req, res) => {
   const { username, password } = req.body;
 
@@ -77,11 +82,11 @@ app.post('/admin', (req, res) => {
       console.log(err);
     } else {
       if (user) {
-        // If the username and password match, set the user in the session and redirect to the add-products page
+        // Hvis brukernavn og passord matcher, settes brukeren i session og redirect til add-products siden
         req.session.user = user;
         res.redirect('/add-products');
       } else {
-        // If the username and password don't match, display an error message
+        // Hvis brukernavn og passord ikke matcher, vis en feilmelding
         res.render('admin', { errorMessage: 'Invalid username or password!' });
       }
     }
@@ -89,7 +94,8 @@ app.post('/admin', (req, res) => {
 });
 
 
-// Render the add-products page
+// Render add-products siden når brukeren besøker URL-en /add-products
+// Krever at brukeren er logget inn
 app.get('/add-products', requireAuth, (req, res) => {
   productsCollection.find().toArray((err, products) => {
     if (err) {
@@ -100,28 +106,50 @@ app.get('/add-products', requireAuth, (req, res) => {
   });
 });
 
-
-
-
+// Render veileder siden når brukeren besøker URL-en /veileder
+// Krever at brukeren er logget inn
 app.get('/veileder', requireAuth, (req, res) => {
   res.render('veileder');
 });
 
+app.get('/veiledning-admin', requireAuth, (req, res) => {
+  res.render('veiledning-admin');
+});
 
+// Sletter et produkt fra databasen når brukeren sender en POST-forespørsel til URL-en /delete-product med produktets ID
+// Krever at brukeren er logget inn
 app.post('/delete-product', requireAuth, (req, res) => {
   const productId = req.query.id;
   productsCollection.deleteOne({ _id: ObjectId(productId) }, (err, result) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Product deleted from database');
+      console.log('Produkt slettet fra databasen');
       res.redirect('/add-products');
     }
   });
 });
 
+// Oppdaterer et produkt i databasen når brukeren sender en POST-forespørsel til URL-en /update-product/:id med produktets ID
+// Krever at brukeren er logget inn
+app.post('/update-product/:id', requireAuth, (req, res) => {
+  const productId = req.body.productId;
+  const { tittel, dato, modell, merke, pris, artikkelnummer } = req.body;
+  productsCollection.updateOne(
+    { _id: ObjectId(productId) },
+    { $set: { tittel: tittel, dato: dato, modell: modell, merke: merke, pris: pris, artikkelnummer: artikkelnummer } },
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Produkt oppdatert i databasen');
+        res.redirect('/add-products');
+      }
+    }
+  );
+});
 
-// Add a new product to the database
+// Legger til et nytt produkt i databasen når brukeren sender en POST-forespørsel til URL-en /products
 app.post('/products', (req, res) => {
   const { tittel, dato, modell, merke, pris, artikkelnummer } = req.body;
   const products = { tittel, dato, modell, merke, pris, artikkelnummer };
@@ -129,12 +157,11 @@ app.post('/products', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log('Product added to database');
+      console.log('Produkt lagt til i databasen');
       res.redirect('/');
     }
   });
 });
 
-// Start the Express app
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+// Starter Express-appen og lytter på port 3000
+app.listen(3000, () => console.log('Listening on port 3000'));

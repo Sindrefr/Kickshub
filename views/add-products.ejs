@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>KicksHub</title>
+    <title>KicksHub - Add Products</title>
     <link rel="stylesheet" href="/styles.css">
-    
   </head>
   <body>
-    <header>
       <nav>
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/veileder">Veileder</a></li>
+          <li><a href="/veiledning-admin">Hvordan?</a></li>
         </ul>
       </nav>
-    <title>Add Products</title>
-  </head>
-  <body>
+
+    <!-- Form for å legge til nye produkter i databasen -->
     <h1>Add Products</h1>
     <form class="addForm" method="POST" action="/products">
       <label for="tittel">Title:</label>
@@ -38,19 +36,45 @@
 
       <button type="submit">Add Product</button>
     </form>
-
-    <h1>Add Products</h1>
-    <h1>Add Products</h1>
-
-    <% products.forEach((product) => { %>
-      <form method="POST" action="/delete-product">
-        <button type="submit" name="productId" value="<%= products._id %>">Delete</button>
-
-      </form>
-      <%= product.tittel %>
-    <% }); %>
     
+    <!-- Henter alle produktene sin tittel og viser de, samt en delete knapp som sender en post request med action deleteproduct med IDen -->
+    <h2>Delete products</h2>
+    <% products.forEach((product) => { %>
+      <%= product.tittel %>
+      <td><%= product._id %></td>
+      <form method="POST" action="/delete-product?id=<%= product._id %>">
+        <input type="hidden" name="id" value="<%= product._id %>">
+        <button type="submit">Delete</button>
+      </form>
+    <% }); %>
 
+<!-- Form for å oppdatere et produkt i databasen -->
+    <h2>Update products</h2>
+    <form action="/update-product/:id" method="POST">
+  <input type="hidden" name="_method" value="PUT">
+  <label for="productId">Product ID:</label>
+  <input type="text" name="productId" required>
+  <br><br>
+  <label for="tittel">Title:</label>
+  <input type="text" name="tittel" required>
+  <br><br>
+  <label for="dato">Date:</label>
+  <input type="date" name="dato" required>
+  <br><br>
+  <label for="modell">Model:</label>
+  <input type="text" name="modell" required>
+  <br><br>
+  <label for="merke">Brand:</label>
+  <input type="text" name="merke" required>
+  <br><br>
+  <label for="pris">Price:</label>
+  <input type="number" name="pris" required>
+  <br><br>
+  <label for="artikkelnummer">Article number:</label>
+  <input type="number" name="artikkelnummer" required>
+  <br><br>
+  <input type="submit" value="Update product">
+</form>
 
   </body>
 </html>

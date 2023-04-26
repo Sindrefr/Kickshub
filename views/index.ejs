@@ -3,10 +3,8 @@
   <head>
     <title>KicksHub</title>
     <link rel="stylesheet" href="/styles.css">
-    
   </head>
   <body>
-    <header>
       <nav>
         <ul>
           <li><a href="/admin">Admin Login</a></li>
@@ -14,9 +12,9 @@
         </ul>
       </nav>
       <h1>KicksHub</h1>
-    </header>
+
     
-    <main>
+    <!-- Viser produktene -->
       <h2>Our newest products!</h2>
       <% products.forEach(product => { %>
         <div class="product">
@@ -29,12 +27,10 @@
           <p>Artikkelnummer: <%= product.artikkelnummer %></p>
         </div>
       <% }) %>
-    </main>
-    
+  
     <footer>
       <p>&copy; 2023 KicksHub</p>
     </footer>
-    
     
   </body>
 </html>
