@@ -16,7 +16,6 @@ app.use(session({
 // Håndterer statiske filer i public mappen
 app.use(express.static('public'));
 
-// Konfigurerer appen til å bruke bodyParser for å tolke URL-encoded data og JSON-data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -62,10 +61,19 @@ app.get('/admin', (req, res) => {
   res.render('admin');
 });
 
+// Render veileder siden når brukeren besøker URL-en /veileder
+// Krever at brukeren er logget inn
+app.get('/veileder', requireAuth, (req, res) => {
+  res.render('veileder');
+});
+
+app.get('/veiledning-admin', requireAuth, (req, res) => {
+  res.render('veiledning-admin');
+});
+
 // Middleware funksjon som sjekker om brukeren er autentisert
 function requireAuth(req, res, next) {
   if (req.session && req.session.user) {
-    // Hvis brukeren er autentisert, fortsetter requesten til neste middleware funksjon
     return next();
   } else {
     // Hvis brukeren ikke er autentisert, redirect til login siden
@@ -94,7 +102,7 @@ app.post('/admin', (req, res) => {
 });
 
 
-// Render add-products siden når brukeren besøker URL-en /add-products
+// Render add-products siden
 // Krever at brukeren er logget inn
 app.get('/add-products', requireAuth, (req, res) => {
   productsCollection.find().toArray((err, products) => {
@@ -106,15 +114,7 @@ app.get('/add-products', requireAuth, (req, res) => {
   });
 });
 
-// Render veileder siden når brukeren besøker URL-en /veileder
-// Krever at brukeren er logget inn
-app.get('/veileder', requireAuth, (req, res) => {
-  res.render('veileder');
-});
 
-app.get('/veiledning-admin', requireAuth, (req, res) => {
-  res.render('veiledning-admin');
-});
 
 // Sletter et produkt fra databasen når brukeren sender en POST-forespørsel til URL-en /delete-product med produktets ID
 // Krever at brukeren er logget inn
