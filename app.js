@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
 // Konfigurerer MongoDB Atlas connection string
-const uri = `mongodb+srv://admin:${process.env.DB_PASSWORD}@cluster0.f0vgbuk.mongodb.net/<dbname>?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://admin:${process.env.DB_PASSWORD}@cluster0.f0vgbuk.mongodb.net/products?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 
 let productsCollection;
